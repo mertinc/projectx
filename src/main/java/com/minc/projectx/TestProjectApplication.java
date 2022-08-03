@@ -3,6 +3,7 @@ package com.minc.projectx;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,12 +25,17 @@ public class TestProjectApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		auth.inMemoryAuthentication()
-		.withUser("user1").password(encoder.encode("user")).roles("USER")
-		.and()
-		.withUser("admin1").password(encoder.encode("admin")).roles("ADMIN");
+		auth.authenticationProvider(authenticatiorProvider)
 		}
+
+
+	@Bean
+	DaoAuthenticationProvider daoAuthenticationProvider(){
+		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+
+		daoAuthenticationProvider.setPasswordEncoder(passw);
+
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
